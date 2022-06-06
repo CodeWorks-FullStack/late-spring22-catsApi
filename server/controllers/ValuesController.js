@@ -6,20 +6,30 @@ export class ValuesController extends BaseController {
     super('api/values')
     this.router
       .get('', this.getAll)
+      .get('/secret', this.getSecret)
       .post('', this.create)
       .delete('/:valueId', this.remove)
   }
 
   /**
    * Sends found values to a client by request
-   * @param {import("express").Request} req
-   * @param {import("express").Response} res
-   * @param {import("express").NextFunction} next
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+   * @param {import("express").NextFunction} nextDoor
    */
-  async getAll(req, res, next) {
+  async getAll(request, response, nextDoor) {
     try {
       const values = await valuesService.find()
-      return res.send(values)
+      return response.send(values)
+    } catch (error) {
+      nextDoor(error)
+    }
+  }
+
+  async getSecret(request, response, next){
+    try {
+      // NOTE just a quick example of api routes don't do this exactly this way
+      response.send('you found the secret')
     } catch (error) {
       next(error)
     }
